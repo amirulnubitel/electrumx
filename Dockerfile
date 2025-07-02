@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for ElectrumX Server
 # This builds ElectrumX from source with all required dependencies
 
-FROM python:3.12 AS builder
+FROM python:3.12-slim-bookworm AS builder
 
 # Set working directory
 WORKDIR /app
@@ -37,7 +37,7 @@ COPY src/ ./src/
 RUN pip install --no-cache-dir .[rocksdb]
 
 # Production stage
-FROM python:3.12
+FROM python:3.12-slim-bookworm
 
 # Install runtime dependencies only
 RUN apt-get update && apt-get install -y --no-install-recommends \
