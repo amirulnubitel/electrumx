@@ -41,7 +41,7 @@ FROM python:3.11-slim-bookworm
 
 # Install runtime dependencies only
 RUN apt-get update && apt-get install -y --no-install-recommends \
-   librocksdb6.11 \
+   librocksdb8.8 \
    libsnappy1v5 \
    libbz2-1.0 \
    zlib1g \
