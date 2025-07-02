@@ -29,8 +29,8 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 # Copy project files one by one to better identify any issues
 COPY pyproject.toml ./
 COPY MANIFEST.in ./
-COPY README.md ./
-COPY LICENCE ./
+# COPY README.md ./
+# COPY LICENCE ./
 COPY src/ ./src/
 
 # Install the package with optional dependencies
