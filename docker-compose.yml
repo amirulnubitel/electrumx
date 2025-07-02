@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  electrumx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: electrumx-server
+    restart: unless-stopped
+    
+    # Port mappings
+    ports:
+      - "50001:50001"   # TCP Electrum protocol
+      - "50002:50002"   # SSL Electrum protocol
+      - "50004:50004"   # WebSocket Electrum protocol
+      - "8000:8000"     # RPC interface (only bind to localhost for security)
+    
+    # Volume mounts for persistence
+    volumes:
+      - electrumx-db:/var/lib/electrumx
+      - ./ssl:/ssl:ro  # Optional: mount SSL certificates
+      - ./logs:/var/log/electrumx  # Optional: mount logs directory
+    
+    # Environment variables
+    environment:
+      # Core settings
+      COIN: "Vertcoin"
+      DAEMON_URL: "http://vertcoin:password@vertcoin-node:5888/"
+      DB_ENGINE: "rocksdb"
+      
+      # Network services
+      SERVICES: "tcp://:50001,ssl://:50002,wss://:50004,rpc://127.0.0.1:8000"
+      REPORT_SERVICES: "tcp://your-domain.com:50001,ssl://your-domain.com:50002"
+      
+      # Performance tuning
+      CACHE_MB: "4000"
+      MAX_SESSIONS: "10000"
+      MAX_SEND: "10000000"
+      BANDWIDTH_UNIT_COST: "50000"
+      
+      # SSL configuration (optional)
+      # SSL_CERTFILE: "/ssl/electrumx.crt"
+      # SSL_KEYFILE: "/ssl/electrumx.key"
+      
+      # Logging and monitoring
+      ANON_LOGS: "true"
+      LOG_SESSIONS: "3600"
+      
+      # Optional: Custom banner
+      # BANNER_FILE: "/app/banner.txt"
+      
+      # Security
+      ALLOW_ROOT: "false"
+      
+      # Optional: Donation address for your server
+      # DONATION_ADDRESS: "your_vertcoin_address_here"
+      
+      # Peer discovery
+      PEER_DISCOVERY: "on"
+      PEER_ANNOUNCE: "on"
+      
+    # Resource limits (adjust based on your system)
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '0.5'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('127.0.0.1', 8000)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    
+    # Wait for the blockchain node to be ready
+    depends_on:
+      - vertcoin-node
+    
+    # Network configuration
+    networks:
+      - electrumx-network
+
+  # Optional: Include a Vertcoin node if you don't have one
+  vertcoin-node:
+    image: vertcoin/vertcoind:latest
+    container_name: vertcoin-node
+    restart: unless-stopped
+    
+    ports:
+      - "5889:5889"  # P2P port
+      - "5888:5888"  # RPC port (only accessible internally)
+    
+    volumes:
+      - vertcoin-data:/home/vertcoin/.vertcoin
+      - ./vertcoin.conf:/home/vertcoin/.vertcoin/vertcoin.conf:ro
+    
+    environment:
+      VERTCOIN_RPC_USER: "vertcoin"
+      VERTCOIN_RPC_PASSWORD: "password"
+    
+    # Resource limits for the node
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    
+    # Health check for the node
+    healthcheck:
+      test: ["CMD", "vertcoin-cli", "getblockchaininfo"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 300s  # Give the node time to sync initially
+    
+    networks:
+      - electrumx-network
+
+# Named volumes for data persistence
+volumes:
+  electrumx-db:
+    driver: local
+  vertcoin-data:
+    driver: local
+
+# Network configuration
+networks:
+  electrumx-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

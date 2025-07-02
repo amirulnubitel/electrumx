@@ -1899,23 +1899,16 @@ class TokenPay(ScryptMixin, Coin):
 
 class Vertcoin(Coin):
     NAME = "Vertcoin"
-    SHORTNAME = "VTC"
+    SHORTNAME = "VTO"
     NET = "mainnet"
-    XPUB_VERBYTES = bytes.fromhex("0488B21E")
-    XPRV_VERBYTES = bytes.fromhex("0488ADE4")
-    P2PKH_VERBYTE = bytes.fromhex("47")
-    GENESIS_HASH = ('4d96a915f49d40b1e5c2844d1ee2dccb'
-                    '90013a990ccea12c492d22110489f0c4')
-    DESERIALIZER = lib_tx.DeserializerSegWit
-    TX_COUNT = 2383423
-    TX_COUNT_HEIGHT = 759076
-    TX_PER_BLOCK = 3
-    RPC_PORT = 5888
-    REORG_LIMIT = 1000
-    PEERS = [
-        'electrumx-vtc.cryptoverted.com t55001 s55002',
-        'electrumx.javerity.com t5885 s5886',
-    ]
+    RPC_PORT = 8445
+    P2PKH_VERBYTE = bytes.fromhex("70")
+    P2SH_VERBYTES = (bytes.fromhex("132"),)
+    WIF_BYTE = bytes.fromhex("198")
+    GENESIS_HASH = ('0x00')
+    TX_COUNT = 1
+    TX_COUNT_HEIGHT = 0
+    TX_PER_BLOCK = 10
 
 
 class VertcoinTestnet(Vertcoin):
@@ -1991,6 +1984,12 @@ class MonacoinRegtest(MonacoinTestnet):
     TX_COUNT = 1
     TX_COUNT_HEIGHT = 1
 
+
+class Crown(AuxPowMixin, Coin):
+    NAME = "Crown"
+    SHORTNAME = "CRW"
+    NET = "mainnet"
+    XP
 
 class Crown(AuxPowMixin, Coin):
     NAME = "Crown"
@@ -4128,3 +4127,18 @@ class FerriteTestnet(Ferrite):
         'enode2.ferritecoin.org s t',
         'enode3.ferritecoin.org s t',
     ]
+
+
+class Vertocoin(Coin):
+    NAME = "Vertocoin"
+    SHORTNAME = "VTO"
+    NET = "mainnet"
+    RPC_PORT = 8445
+    P2PKH_VERBYTE = bytes.fromhex("47")
+    P2SH_VERBYTES = (bytes.fromhex("05"),)
+    WIF_BYTE = bytes.fromhex("c7")
+    GENESIS_HASH = ('4d96a915f49d40b1e5c2844d1ee2dccb'
+                    '90013a990ccea12c492d22110489f0c4')
+    TX_COUNT = 1000
+    TX_COUNT_HEIGHT = 1000
+    TX_PER_BLOCK = 10
