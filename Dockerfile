@@ -10,12 +10,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
    build-essential \
    pkg-config \
-   librocksdb-dev \
-   libsnappy-dev \
-   libbz2-dev \
-   libz-dev \
-   liblz4-dev \
-   liblzma-dev \
    git \
    && rm -rf /var/lib/apt/lists/*
 
@@ -33,20 +27,14 @@ COPY MANIFEST.in ./
 # COPY LICENCE ./
 COPY src/ ./src/
 
-# Install the package with optional dependencies
-RUN pip install --no-cache-dir .[rocksdb]
+# Install the package with python-rocksdb
+RUN pip install --no-cache-dir . python-rocksdb
 
 # Production stage
 FROM python:3.12-slim-bookworm
 
-# Install runtime dependencies only
+# Install minimal runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-   librocksdb8.8 \
-   libsnappy1v5 \
-   libbz2-1.0 \
-   zlib1g \
-   liblz4-1 \
-   liblzma5 \
    && rm -rf /var/lib/apt/lists/*
 
 # Copy the virtual environment from builder stage
