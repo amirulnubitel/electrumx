@@ -1902,9 +1902,9 @@ class Vertcoin(Coin):
     SHORTNAME = "VTO"
     NET = "mainnet"
     RPC_PORT = 8445
-    P2PKH_VERBYTE = bytes.fromhex("70")
-    P2SH_VERBYTES = (bytes.fromhex("132"),)
-    WIF_BYTE = bytes.fromhex("198")
+    P2PKH_VERBYTE = bytes.fromhex("47")
+    P2SH_VERBYTES = (bytes.fromhex("05"),)
+    WIF_BYTE = bytes.fromhex("80")
     GENESIS_HASH = ('0x00')
     TX_COUNT = 1
     TX_COUNT_HEIGHT = 0
@@ -1984,12 +1984,6 @@ class MonacoinRegtest(MonacoinTestnet):
     TX_COUNT = 1
     TX_COUNT_HEIGHT = 1
 
-
-class Crown(AuxPowMixin, Coin):
-    NAME = "Crown"
-    SHORTNAME = "CRW"
-    NET = "mainnet"
-    XP
 
 class Crown(AuxPowMixin, Coin):
     NAME = "Crown"
