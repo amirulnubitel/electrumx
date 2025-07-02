@@ -26,8 +26,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Upgrade pip and install wheel
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Copy project files
-COPY pyproject.toml MANIFEST.in README.md LICENCE ./
+# Copy project files one by one to better identify any issues
+COPY pyproject.toml ./
+COPY MANIFEST.in ./
+COPY README.md ./
+COPY LICENCE ./
 COPY src/ ./src/
 
 # Install the package with optional dependencies

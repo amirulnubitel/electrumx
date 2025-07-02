@@ -5,30 +5,34 @@ This directory contains a complete Docker Compose setup for running ElectrumX wi
 ## Quick Start
 
 1. **Copy the example configuration files:**
+
    ```bash
    cp .env.example .env
    cp vertcoin.conf.example vertcoin.conf
    ```
 
 2. **Edit the configuration:**
-   - Modify `.env` with your specific settings
-   - Update `vertcoin.conf` with your node preferences
-   - Set your domain/IP in `REPORT_SERVICES`
+
+   -  Modify `.env` with your specific settings
+   -  Update `vertcoin.conf` with your node preferences
+   -  Set your domain/IP in `REPORT_SERVICES`
 
 3. **Start the services:**
+
    ```bash
    # Start both ElectrumX and Vertcoin node
    docker-compose up -d
-   
+
    # Or start only ElectrumX (if you have an external node)
    docker-compose up -d electrumx
    ```
 
 4. **Monitor the logs:**
+
    ```bash
    # View ElectrumX logs
    docker-compose logs -f electrumx
-   
+
    # View Vertcoin node logs
    docker-compose logs -f vertcoin-node
    ```
@@ -39,40 +43,40 @@ This directory contains a complete Docker Compose setup for running ElectrumX wi
 
 Key settings to customize:
 
-- `COIN`: Cryptocurrency to serve (default: Vertcoin)
-- `DAEMON_URL`: Connection to your blockchain node
-- `REPORT_SERVICES`: Your public server endpoints
-- `CACHE_MB`: Memory allocation for caching
-- `SSL_CERTFILE`/`SSL_KEYFILE`: SSL certificate paths
+-  `COIN`: Cryptocurrency to serve (default: Vertcoin)
+-  `DAEMON_URL`: Connection to your blockchain node
+-  `REPORT_SERVICES`: Your public server endpoints
+-  `CACHE_MB`: Memory allocation for caching
+-  `SSL_CERTFILE`/`SSL_KEYFILE`: SSL certificate paths
 
 ### Node Configuration (vertcoin.conf)
 
 Important settings:
 
-- `txindex=1`: Required for ElectrumX to function
-- `rpcuser`/`rpcpassword`: Must match DAEMON_URL
-- `rpcallowip`: Allow ElectrumX container to connect
+-  `txindex=1`: Required for ElectrumX to function
+-  `rpcuser`/`rpcpassword`: Must match DAEMON_URL
+-  `rpcallowip`: Allow ElectrumX container to connect
 
 ## Services
 
 ### ElectrumX Server
 
-- **TCP Port**: 50001 (standard Electrum protocol)
-- **SSL Port**: 50002 (encrypted Electrum protocol)  
-- **WebSocket Port**: 50004 (for web clients)
-- **RPC Port**: 8000 (admin interface, localhost only)
+-  **TCP Port**: 50001 (standard Electrum protocol)
+-  **SSL Port**: 50002 (encrypted Electrum protocol)
+-  **WebSocket Port**: 50004 (for web clients)
+-  **RPC Port**: 8000 (admin interface, localhost only)
 
 ### Vertcoin Node
 
-- **P2P Port**: 5889 (blockchain network)
-- **RPC Port**: 5888 (internal communication)
+-  **P2P Port**: 5889 (blockchain network)
+-  **RPC Port**: 5888 (internal communication)
 
 ## Data Persistence
 
 All data is stored in Docker volumes:
 
-- `electrumx-db`: ElectrumX database and indexes
-- `vertcoin-data`: Blockchain data and wallet
+-  `electrumx-db`: ElectrumX database and indexes
+-  `vertcoin-data`: Blockchain data and wallet
 
 ## SSL Setup (Optional)
 
@@ -139,7 +143,7 @@ docker-compose down -v
 
 ## Security Notes
 
-- RPC interface is bound to localhost only
-- Non-root user runs ElectrumX process
-- Network isolation between containers
-- Resource limits prevent system overload
+-  RPC interface is bound to localhost only
+-  Non-root user runs ElectrumX process
+-  Network isolation between containers
+-  Resource limits prevent system overload
